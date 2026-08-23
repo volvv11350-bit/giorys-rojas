@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GIORYS ROJAS by MONTECATINI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f3ef;
+    --bg-card: #fffdfb;
+    --sidebar: #3d322c;
+    --sidebar-hover: #4f423b;
+    --accent: #6b5344;
+    --accent-soft: #e8ddd4;
+    --accent-dark: #4a3a32;
+    --text: #2c2420;
+    --text-muted: #8a7d74;
+    --border: #ebe3db;
+    --white: #ffffff;
+    --shadow: 0 4px 20px rgba(60, 45, 35, 0.06);
+    --shadow-sm: 0 2px 10px rgba(60, 45, 35, 0.04);
+    --radius: 16px;
+    --green: #5a8f6a;
+    --green-bg: #e8f3eb;
+    --orange: #c4892a;
+    --orange-bg: #fef6e8;
+    --red: #c45c4a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    position: fixed; left: 0; top: 0; bottom: 0;
+    width: 240px; background: var(--sidebar); color: white;
+    padding: 28px 16px; display: flex; flex-direction: column; z-index: 100;
+  }
+  .logo { margin-bottom: 36px; padding: 0 10px; }
+  .logo-main { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; letter-spacing: 0.3px; }
+  .logo-main .emoji { font-size: 18px; }
+  .logo-sub { font-size: 10px; font-weight: 500; opacity: 0.5; letter-spacing: 1.4px; text-transform: uppercase; margin-top: 5px; padding-left: 26px; }
+  .nav {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px; margin: 2px 0; border-radius: 12px;
+    color: rgba(255,255,255,0.65); font-size: 13.5px; font-weight: 500;
+    cursor: pointer; transition: all 0.2s ease;
+  }
+  .nav:hover { background: var(--sidebar-hover); color: white; }
+  .nav.active { background: var(--accent); color: white; box-shadow: 0 4px 14px rgba(107,83,68,0.35); }
+  .nav .icon { font-size: 17px; width: 22px; text-align: center; }
+  .sidebar-footer { margin-top: auto; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
+
+  /* Main */
+  .main { margin-left: 240px; padding: 28px 32px; max-width: 1280px; }
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; flex-wrap: wrap; gap: 12px; }
+  .header h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.3px; }
+  .header-sub { color: var(--text-muted); font-size: 13px; margin-top: 3px; }
+  .user-btn {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--bg-card); padding: 9px 16px; border-radius: 50px;
+    box-shadow: var(--shadow-sm); font-size: 13px; font-weight: 500;
+    cursor: pointer; border: 1px solid var(--border);
+  }
+  .user-avatar {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 12px; font-weight: 600;
+  }
+
+  /* Cards */
+  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  .card {
+    background: var(--bg-card); padding: 22px; border-radius: var(--radius);
+    box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+    transition: all 0.25s ease;
+  }
+  .card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+  .card-icon {
+    width: 40px; height: 40px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; margin-bottom: 14px;
+  }
+  .card-icon.brown { background: var(--accent-soft); }
+  .card-icon.soft { background: #f0ebe6; }
+  .card-icon.mint { background: var(--green-bg); }
+  .card-icon.cream { background: #f5efe8; }
+  .card .label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+  .card .value { font-size: 26px; font-weight: 700; margin-top: 4px; letter-spacing: -0.5px; }
+  .card .value.accent { color: var(--accent); }
+  .card .trend { font-size: 11px; margin-top: 6px; color: var(--text-muted); }
+
+  /* Panels */
+  .grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; }
+  .panel {
+    background: var(--bg-card); border-radius: var(--radius); padding: 24px;
+    box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+  }
+  .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px; }
+  .panel h2 { font-size: 16px; font-weight: 600; }
+
+  /* Buttons */
+  .btn {
+    background: var(--accent); color: white; border: none;
+    padding: 10px 16px; border-radius: 10px; font-weight: 600;
+    font-size: 13px; font-family: inherit; cursor: pointer;
+    transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(107,83,68,0.3); }
+  .btn-outline { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+  .btn-outline:hover { background: var(--bg); color: var(--text); box-shadow: none; transform: none; }
+  .btn-sm { padding: 6px 12px; font-size: 12px; }
+
+  /* Filters */
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .filter-btn {
+    padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border);
+    background: var(--white); font-size: 12px; font-weight: 500; cursor: pointer; font-family: inherit;
+    color: var(--text-muted); transition: all 0.15s;
+  }
+  .filter-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    text-align: left; padding: 10px 8px; font-size: 11px; font-weight: 600;
+    color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px;
+    border-bottom: 1px solid var(--border);
+  }
+  td { padding: 12px 8px; font-size: 13px; border-bottom: 1px solid var(--border); font-weight: 500; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #faf7f4; }
+  .client-cell { display: flex; align-items: center; gap: 10px; }
+  .client-avatar {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--accent-soft); color: var(--accent-dark);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600; flex-shrink: 0;
+  }
+  .status {
+    padding: 4px 11px; border-radius: 20px; font-size: 11px; font-weight: 600;
+    display: inline-block; cursor: pointer;
+  }
+  .status.realizada { background: var(--green-bg); color: var(--green); }
+  .status.confirmada { background: var(--accent-soft); color: var(--accent-dark); }
+  .status.pendiente { background: var(--orange-bg); color: var(--orange); }
+  .action-btn { background: none; border: none; cursor: pointer; font-size: 15px; padding: 4px 5px; border-radius: 6px; }
+  .action-btn:hover { background: var(--bg); }
+
+  /* Calendar */
+  .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .day-label { text-align: center; font-size: 10px; font-weight: 600; color: var(--text-muted); padding: 8px 0; text-transform: uppercase; letter-spacing: 0.3px; }
+  .day {
+    min-height: 52px; padding: 6px 4px; background: var(--bg); border-radius: 10px;
+    text-align: center; font-size: 13px; font-weight: 500; cursor: pointer;
+    transition: all 0.15s; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  }
+  .day:hover { background: var(--accent-soft); }
+  .day.today { background: var(--accent); color: white; font-weight: 700; }
+  .day.today .day-dot { background: white; }
+  .day.empty { background: transparent; cursor: default; min-height: 20px; }
+  .day-num { font-size: 13px; }
+  .day-dots { display: flex; gap: 2px; flex-wrap: wrap; justify-content: center; }
+  .day-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+  .day.today .day-dot { background: rgba(255,255,255,0.8); }
+
+  .summary-box {
+    margin-top: 20px; padding: 18px;
+    background: linear-gradient(135deg, #f5efe8 0%, #efe6dc 100%);
+    border-radius: 14px; border: 1px solid var(--border);
+  }
+  .summary-box .label { font-size: 12px; font-weight: 600; }
+  .summary-box .amount { font-size: 24px; font-weight: 700; margin-top: 4px; color: var(--accent); }
+  .summary-box .desc { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+  /* Sections */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* Services */
+  .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+  .service-card {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 14px;
+    padding: 18px; transition: all 0.2s;
+  }
+  .service-card:hover { border-color: var(--accent); box-shadow: var(--shadow-sm); }
+  .service-card h4 { font-size: 14px; margin-bottom: 4px; }
+  .service-card .price { font-size: 20px; font-weight: 700; color: var(--accent); }
+  .service-card .actions { margin-top: 12px; display: flex; gap: 6px; }
+
+  /* Stats */
+  .stat-bar-row { margin-bottom: 14px; }
+  .stat-bar-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; }
+  .stat-bar-bg { height: 8px; background: var(--bg); border-radius: 8px; overflow: hidden; }
+  .stat-bar-fill { height: 100%; background: var(--accent); border-radius: 8px; transition: width 0.4s ease; }
+
+  /* Config */
+  .config-group { margin-bottom: 24px; }
+  .config-group h3 { font-size: 14px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .config-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; gap: 12px; flex-wrap: wrap; }
+  .config-row label { font-size: 13px; }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(44,36,32,0.4); backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center; z-index: 1000;
+    opacity: 0; visibility: hidden; transition: all 0.25s ease;
+  }
+  .modal-overlay.open { opacity: 1; visibility: visible; }
+  .modal {
+    background: var(--bg-card); border-radius: 20px; padding: 28px;
+    width: 100%; max-width: 420px; box-shadow: 0 20px 60px rgba(44,36,32,0.18);
+    transform: translateY(16px) scale(0.97); transition: all 0.25s ease;
+    max-height: 90vh; overflow-y: auto; border-top: 3px solid var(--accent);
+  }
+  .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+  .modal h3 { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+  .form-group { margin-bottom: 14px; }
+  .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 5px; }
+  .form-group input, .form-group select {
+    width: 100%; padding: 11px 13px; border: 1px solid var(--border);
+    border-radius: 10px; font-size: 13px; font-family: inherit; color: var(--text); background: var(--bg);
+  }
+  .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--accent); background: white; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .modal-actions { display: flex; gap: 10px; margin-top: 22px; justify-content: flex-end; }
+
+  .empty-state { text-align: center; padding: 36px 16px; color: var(--text-muted); font-size: 13px; }
+
+  @media print {
+    .sidebar, .header .btn, .nav, .user-btn, .filters, .action-btn, .btn, .modal-overlay { display: none !important; }
+    .main { margin-left: 0 !important; padding: 16px !important; }
+    .section { display: block !important; }
+    body { background: white; }
+  }
+
+  @media (max-width: 1100px) {
+    .cards { grid-template-columns: repeat(2, 1fr); }
+    .grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 768px) {
+    .sidebar { width: 68px; padding: 20px 10px; }
+    .logo-main span:not(.emoji), .logo-sub, .nav span:not(.icon) { display: none; }
+    .nav { justify-content: center; padding: 12px; }
+    .main { margin-left: 68px; padding: 20px 16px; }
+    .cards { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .header h1 { font-size: 20px; }
+    .modal { margin: 12px; padding: 22px; }
+  }
+  @media (max-width: 480px) {
+    .cards { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-main"><span class="emoji">💅</span> GIORYS ROJAS</div>
+    <div class="logo-sub">by Montecatini</div>
+  </div>
+  <nav>
+    <div class="nav active" data-section="inicio"><span class="icon">📊</span> <span>Inicio</span></div>
+    <div class="nav" data-section="citas"><span class="icon">📅</span> <span>Citas</span></div>
+    <div class="nav" data-section="clientas"><span class="icon">👩</span> <span>Clientas</span></div>
+    <div class="nav" data-section="servicios"><span class="icon">💅</span> <span>Servicios</span></div>
+    <div class="nav" data-section="facturacion"><span class="icon">💰</span> <span>Facturación</span></div>
+    <div class="nav" data-section="estadisticas"><span class="icon">📈</span> <span>Estadísticas</span></div>
+    <div class="nav" data-section="configuracion"><span class="icon">⚙️</span> <span>Configuración</span></div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="nav" onclick="if(confirm('¿Cerrar sesión?')) location.reload()"><span class="icon">🚪</span> <span>Cerrar sesión</span></div>
+  </div>
+</aside>
+
+<main class="main">
+  <!-- INICIO -->
+  <section class="section active" id="sec-inicio">
+    <div class="header">
+      <div>
+        <h1>Buenos días 👋</h1>
+        <div class="header-sub" id="fecha-hoy">Resumen de tu negocio</div>
+      </div>
+      <div class="user-btn"><div class="user-avatar">GR</div><span>Mi cuenta</span></div>
+    </div>
+    <section class="cards">
+      <div class="card"><div class="card-icon brown">💶</div><div class="label">Facturación de hoy</div><div class="value accent" id="fact-hoy">0,00 €</div><div class="trend" id="trend-hoy">—</div></div>
+      <div class="card"><div class="card-icon soft">📅</div><div class="label">Facturación del mes</div><div class="value" id="fact-mes">0,00 €</div><div class="trend">Este mes</div></div>
+      <div class="card"><div class="card-icon mint">✨</div><div class="label">Citas de hoy</div><div class="value" id="citas-hoy">0</div><div class="trend" id="citas-detalle">—</div></div>
+      <div class="card"><div class="card-icon cream">👩</div><div class="label">Clientas este mes</div><div class="value" id="clientas-mes">0</div><div class="trend">Únicas</div></div>
+    </section>
+    <div class="grid">
+      <section class="panel">
+        <div class="panel-header"><h2>Citas de hoy</h2><button class="btn" onclick="abrirModalCita()">+ Nueva cita</button></div>
+        <div id="tabla-citas-hoy"></div>
+      </section>
+      <section class="panel">
+        <div class="panel-header"><h2>Calendario</h2></div>
+        <div class="calendar" id="calendario"></div>
+        <div class="summary-box"><div class="label">Resumen del día</div><div class="amount" id="resumen-dia">0,00 €</div><div class="desc">Facturación de las citas de hoy</div></div>
+      </section>
+    </div>
+  </section>
+
+  <!-- CITAS -->
+  <section class="section" id="sec-citas">
+    <div class="header"><div><h1>Citas</h1><div class="header-sub">Todas tus citas registradas</div></div><button class="btn" onclick="abrirModalCita()">+ Nueva cita</button></div>
+    <div class="panel">
+      <div class="filters" id="filtros-citas">
+        <button class="filter-btn active" data-filtro="todas">Todas</button>
+        <button class="filter-btn" data-filtro="hoy">Hoy</button>
+        <button class="filter-btn" data-filtro="pendiente">Pendientes</button>
+        <button class="filter-btn" data-filtro="confirmada">Confirmadas</button>
+        <button class="filter-btn" data-filtro="realizada">Realizadas</button>
+      </div>
+      <div id="tabla-citas-todas"></div>
+    </div>
+  </section>
+
+  <!-- CLIENTAS -->
+  <section class="section" id="sec-clientas">
+    <div class="header">
+      <div><h1>Clientas</h1><div class="header-sub">Listado de clientas con teléfono</div></div>
+      <button class="btn" onclick="abrirModalClienta()">+ Nueva clienta</button>
+    </div>
+    <div class="panel"><div id="lista-clientas"></div></div>
+  </section>
+
+  <!-- SERVICIOS -->
+  <section class="section" id="sec-servicios">
+    <div class="header"><div><h1>Servicios</h1><div class="header-sub">Catálogo de servicios y precios</div></div><button class="btn" onclick="abrirModalServicio()">+ Nuevo servicio</button></div>
+    <div class="services-grid" id="lista-servicios"></div>
+  </section>
+
+  <!-- FACTURACIÓN -->
+  <section class="section" id="sec-facturacion">
+    <div class="header">
+      <div><h1>Facturación</h1><div class="header-sub">Resumen de ingresos</div></div>
+      <button class="btn" onclick="imprimirFacturas()">🖨️ Imprimir facturas</button>
+    </div>
+    <section class="cards" style="margin-bottom:20px">
+      <div class="card"><div class="card-icon brown">💶</div><div class="label">Hoy</div><div class="value accent" id="fac-hoy">0,00 €</div></div>
+      <div class="card"><div class="card-icon soft">📅</div><div class="label">Este mes</div><div class="value" id="fac-mes">0,00 €</div></div>
+      <div class="card"><div class="card-icon mint">📊</div><div class="label">Total histórico</div><div class="value" id="fac-total">0,00 €</div></div>
+      <div class="card"><div class="card-icon cream">✅</div><div class="label">Citas realizadas</div><div class="value" id="fac-realizadas">0</div></div>
+    </section>
+    <div class="panel"><div class="panel-header"><h2>Detalle de ingresos</h2></div><div id="tabla-facturacion"></div></div>
+  </section>
+
+  <!-- ESTADÍSTICAS -->
+  <section class="section" id="sec-estadisticas">
+    <div class="header"><div><h1>Estadísticas</h1><div class="header-sub">Análisis de tu negocio</div></div></div>
+    <div class="grid">
+      <div class="panel"><div class="panel-header"><h2>Servicios más solicitados</h2></div><div id="stats-servicios"></div></div>
+      <div class="panel"><div class="panel-header"><h2>Resumen general</h2></div><div id="stats-resumen"></div></div>
+    </div>
+  </section>
+
+  <!-- CONFIGURACIÓN -->
+  <section class="section" id="sec-configuracion">
+    <div class="header"><div><h1>Configuración</h1><div class="header-sub">Ajustes del panel</div></div></div>
+    <div class="panel">
+      <div class="config-group"><h3>Datos del negocio</h3>
+        <div class="config-row"><label>Nombre del negocio</label><strong>GIORYS ROJAS by MONTECATINI</strong></div>
+        <div class="config-row"><label>Versión del panel</label><span>1.1 · Diseño renovado</span></div>
+      </div>
+      <div class="config-group"><h3>Datos almacenados</h3>
+        <div class="config-row"><label>Total de citas guardadas</label><span id="cfg-citas">0</span></div>
+        <div class="config-row"><label>Total de servicios</label><span id="cfg-servicios">0</span></div>
+      </div>
+      <div class="config-group"><h3>Copia de seguridad</h3>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Exporta tus datos para usarlos en otro dispositivo.</p>
+        <div class="config-row">
+          <label>Exportar todos los datos</label>
+          <button class="btn btn-sm" onclick="exportarDatos()">⬇️ Descargar copia</button>
+        </div>
+        <div class="config-row">
+          <label>Importar datos</label>
+          <button class="btn btn-sm btn-outline" onclick="document.getElementById('import-file').click()">⬆️ Subir copia</button>
+          <input type="file" id="import-file" accept=".json" style="display:none" onchange="importarDatos(event)">
+        </div>
+      </div>
+      <div class="config-group"><h3>Zona de peligro</h3>
+        <div class="config-row"><label>Borrar todas las citas</label><button class="btn btn-sm" style="background:var(--red)" onclick="borrarTodo('citas')">Borrar citas</button></div>
+        <div class="config-row"><label>Restablecer servicios</label><button class="btn btn-sm btn-outline" onclick="borrarTodo('servicios')">Restablecer</button></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Modal Cita -->
+<div class="modal-overlay" id="modal-cita">
+  <div class="modal">
+    <h3 id="modal-cita-titulo">Nueva cita</h3>
+    <form id="form-cita" onsubmit="guardarCita(event)">
+      <input type="hidden" id="cita-id">
+      <div class="form-row">
+        <div class="form-group"><label>Fecha</label><input type="date" id="fecha" required></div>
+        <div class="form-group"><label>Hora</label><input type="time" id="hora" required></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Importe (€)</label><input type="number" id="importe" min="0" step="0.5" placeholder="35" required></div>
+        <div class="form-group"><label>Estado</label>
+          <select id="estado"><option value="pendiente">Pendiente</option><option value="confirmada">Confirmada</option><option value="realizada">Realizada</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label>Nombre completo</label><input type="text" id="clienta" placeholder="Ej: María López García" required></div>
+      <div class="form-group"><label>Teléfono</label><input type="tel" id="telefono" placeholder="+34 600 000 000" value="+34 "></div>
+      <div class="form-group"><label>Servicio</label><select id="servicio" required></select></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" onclick="cerrarModal('modal-cita')">Cancelar</button>
+        <button type="submit" class="btn">Guardar cita</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal Servicio -->
+<div class="modal-overlay" id="modal-servicio">
+  <div class="modal">
+    <h3 id="modal-serv-titulo">Nuevo servicio</h3>
+    <form id="form-servicio" onsubmit="guardarServicio(event)">
+      <input type="hidden" id="serv-id">
+      <div class="form-group"><label>Nombre del servicio</label><input type="text" id="serv-nombre" placeholder="Ej: Soft Gel" required></div>
+      <div class="form-group"><label>Precio (€)</label><input type="number" id="serv-precio" min="0" step="0.5" placeholder="45" required></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" onclick="cerrarModal('modal-servicio')">Cancelar</button>
+        <button type="submit" class="btn">Guardar servicio</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal Clienta -->
+<div class="modal-overlay" id="modal-clienta">
+  <div class="modal">
+    <h3 id="modal-cli-titulo">Nueva clienta</h3>
+    <form id="form-clienta" onsubmit="guardarClienta(event)">
+      <input type="hidden" id="cli-id">
+      <div class="form-group"><label>Nombre completo</label><input type="text" id="cli-nombre" placeholder="Ej: María López García" required></div>
+      <div class="form-group"><label>Teléfono</label><input type="tel" id="cli-telefono" placeholder="+34 600 000 000" value="+34 " required></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" onclick="cerrarModal('modal-clienta')">Cancelar</button>
+        <button type="submit" class="btn">Guardar clienta</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const KEY_CITAS = 'giorys_citas';
+  const KEY_SERVICIOS = 'giorys_servicios';
+  const KEY_CLIENTAS = 'giorys_clientas';
+  const SERVICIOS_DEFAULT = [
+    { id: 1, nombre: 'Manicura rusa', precio: 35 },
+    { id: 2, nombre: 'Soft Gel', precio: 45 },
+    { id: 3, nombre: 'Pedicura', precio: 40 },
+    { id: 4, nombre: 'Nail Art', precio: 65 },
+    { id: 5, nombre: 'Manicura semi', precio: 30 },
+    { id: 6, nombre: 'Retirada + Manicura', precio: 40 }
+  ];
+  function getCitas() { return JSON.parse(localStorage.getItem(KEY_CITAS) || '[]'); }
+  function setCitas(arr) { localStorage.setItem(KEY_CITAS, JSON.stringify(arr)); }
+  function getServicios() {
+    const data = localStorage.getItem(KEY_SERVICIOS);
+    if (!data) { localStorage.setItem(KEY_SERVICIOS, JSON.stringify(SERVICIOS_DEFAULT)); return [...SERVICIOS_DEFAULT]; }
+    return JSON.parse(data);
+  }
+  function setServicios(arr) { localStorage.setItem(KEY_SERVICIOS, JSON.stringify(arr)); }
+  function getClientas() { return JSON.parse(localStorage.getItem(KEY_CLIENTAS) || '[]'); }
+  function setClientas(arr) { localStorage.setItem(KEY_CLIENTAS, JSON.stringify(arr)); }
+
+  document.querySelectorAll('.nav[data-section]').forEach(el => {
+    el.addEventListener('click', () => {
+      document.querySelectorAll('.nav[data-section]').forEach(n => n.classList.remove('active'));
+      el.classList.add('active');
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById('sec-' + el.dataset.section).classList.add('active');
+      renderAll();
+    });
+  });
+
+  function abrirModalCita(cita = null) {
+    document.getElementById('modal-cita-titulo').textContent = cita ? 'Editar cita' : 'Nueva cita';
+    document.getElementById('cita-id').value = cita ? cita.id : '';
+    document.getElementById('fecha').value = cita ? cita.fecha : hoy();
+    document.getElementById('hora').value = cita ? cita.hora : '';
+    document.getElementById('clienta').value = cita ? cita.clienta : '';
+    document.getElementById('telefono').value = cita && cita.telefono ? cita.telefono : '+34 ';
+    document.getElementById('importe').value = cita ? cita.importe : '';
+    document.getElementById('estado').value = cita ? cita.estado : 'pendiente';
+    const sel = document.getElementById('servicio');
+    const servicios = getServicios();
+    sel.innerHTML = servicios.map(s => `<option value="${s.nombre}" ${cita && cita.servicio === s.nombre ? 'selected' : ''}>${s.nombre} — ${s.precio} €</option>`).join('');
+    if (!cita) {
+      const now = new Date();
+      document.getElementById('hora').value = String(now.getHours()).padStart(2,'0') + ':' + (now.getMinutes() < 30 ? '00' : '30');
+    }
+    sel.onchange = () => { const serv = servicios.find(s => s.nombre === sel.value); if (serv) document.getElementById('importe').value = serv.precio; };
+    document.getElementById('modal-cita').classList.add('open');
+  }
+  function abrirModalServicio(serv = null) {
+    document.getElementById('modal-serv-titulo').textContent = serv ? 'Editar servicio' : 'Nuevo servicio';
+    document.getElementById('serv-id').value = serv ? serv.id : '';
+    document.getElementById('serv-nombre').value = serv ? serv.nombre : '';
+    document.getElementById('serv-precio').value = serv ? serv.precio : '';
+    document.getElementById('modal-servicio').classList.add('open');
+  }
+  function abrirModalClienta(cli = null) {
+    document.getElementById('modal-cli-titulo').textContent = cli ? 'Editar clienta' : 'Nueva clienta';
+    document.getElementById('cli-id').value = cli ? cli.id : '';
+    document.getElementById('cli-nombre').value = cli ? cli.nombre : '';
+    document.getElementById('cli-telefono').value = cli && cli.telefono ? cli.telefono : '+34 ';
+    document.getElementById('modal-clienta').classList.add('open');
+  }
+  function cerrarModal(id) { document.getElementById(id).classList.remove('open'); }
+  document.querySelectorAll('.modal-overlay').forEach(m => { m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); }); });
+
+  function guardarCita(e) {
+    e.preventDefault();
+    let citas = getCitas();
+    const id = document.getElementById('cita-id').value;
+    const nombre = document.getElementById('clienta').value.trim();
+    let telefono = document.getElementById('telefono').value.trim();
+    if (telefono && !telefono.startsWith('+')) telefono = '+34 ' + telefono.replace(/^34\s*/, '');
+    const data = {
+      id: id ? Number(id) : Date.now(),
+      hora: document.getElementById('hora').value,
+      clienta: nombre,
+      telefono: telefono,
+      servicio: document.getElementById('servicio').value,
+      importe: parseFloat(document.getElementById('importe').value),
+      estado: document.getElementById('estado').value,
+      fecha: document.getElementById('fecha').value || hoy()
+    };
+    if (id) citas = citas.map(c => c.id === Number(id) ? data : c);
+    else citas.push(data);
+    citas.sort((a,b) => a.fecha === b.fecha ? a.hora.localeCompare(b.hora) : b.fecha.localeCompare(a.fecha));
+    setCitas(citas);
+    sincronizarClienta(nombre, telefono);
+    cerrarModal('modal-cita');
+    renderAll();
+  }
+  function sincronizarClienta(nombre, telefono) {
+    let clientas = getClientas();
+    const exist = clientas.find(c => c.nombre.toLowerCase() === nombre.toLowerCase());
+    if (exist) { if (telefono) exist.telefono = telefono; }
+    else clientas.push({ id: Date.now(), nombre, telefono: telefono || '+34 ' });
+    setClientas(clientas);
+  }
+  function guardarClienta(e) {
+    e.preventDefault();
+    let clientas = getClientas();
+    const id = document.getElementById('cli-id').value;
+    let telefono = document.getElementById('cli-telefono').value.trim();
+    if (telefono && !telefono.startsWith('+')) telefono = '+34 ' + telefono.replace(/^34\s*/, '');
+    const data = { id: id ? Number(id) : Date.now(), nombre: document.getElementById('cli-nombre').value.trim(), telefono };
+    if (id) clientas = clientas.map(c => c.id === Number(id) ? data : c);
+    else clientas.push(data);
+    setClientas(clientas);
+    cerrarModal('modal-clienta');
+    renderAll();
+  }
+  function eliminarClienta(id) { if (!confirm('¿Eliminar esta clienta?')) return; setClientas(getClientas().filter(c => c.id !== id)); renderAll(); }
+  function eliminarCita(id) { if (!confirm('¿Eliminar esta cita?')) return; setCitas(getCitas().filter(c => c.id !== id)); renderAll(); }
+  function cambiarEstado(id) {
+    const citas = getCitas();
+    const cita = citas.find(c => c.id === id);
+    if (!cita) return;
+    const orden = ['pendiente','confirmada','realizada'];
+    cita.estado = orden[(orden.indexOf(cita.estado)+1) % 3];
+    setCitas(citas);
+    renderAll();
+  }
+  function guardarServicio(e) {
+    e.preventDefault();
+    let servicios = getServicios();
+    const id = document.getElementById('serv-id').value;
+    const data = { id: id ? Number(id) : Date.now(), nombre: document.getElementById('serv-nombre').value.trim(), precio: parseFloat(document.getElementById('serv-precio').value) };
+    if (id) servicios = servicios.map(s => s.id === Number(id) ? data : s);
+    else servicios.push(data);
+    setServicios(servicios);
+    cerrarModal('modal-servicio');
+    renderAll();
+  }
+  function eliminarServicio(id) { if (!confirm('¿Eliminar este servicio?')) return; setServicios(getServicios().filter(s => s.id !== id)); renderAll(); }
+
+  function hoy() { return new Date().toISOString().slice(0,10); }
+  function mesActual() { return hoy().slice(0,7); }
+  function formatoEuro(n) { return (n||0).toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' €'; }
+  function inicial(n) { return (n||'?').charAt(0).toUpperCase(); }
+  function capital(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  function tablaCitas(citas, contenedorId) {
+    const cont = document.getElementById(contenedorId);
+    if (!citas.length) { cont.innerHTML = `<div class="empty-state">No hay citas.<br>Pulsa “+ Nueva cita” para añadir una.</div>`; return; }
+    let html = `<table><thead><tr><th>Fecha</th><th>Hora</th><th>Clienta</th><th>Servicio</th><th>Importe</th><th>Estado</th><th></th></tr></thead><tbody>`;
+    citas.forEach(c => {
+      html += `<tr>
+        <td>${c.fecha}</td><td>${c.hora}</td>
+        <td><div class="client-cell"><div class="client-avatar">${inicial(c.clienta)}</div>${c.clienta}</div></td>
+        <td>${c.servicio}</td><td>${formatoEuro(c.importe)}</td>
+        <td><span class="status ${c.estado}" onclick="cambiarEstado(${c.id})" title="Clic para cambiar">${capital(c.estado)}</span></td>
+        <td>
+          <button class="action-btn" onclick='abrirModalCita(${JSON.stringify(c)})' title="Editar">✏️</button>
+          <button class="action-btn" onclick="eliminarCita(${c.id})" title="Eliminar">🗑️</button>
+        </td>
+      </tr>`;
+    });
+    html += `</tbody></table>`;
+    cont.innerHTML = html;
+  }
+
+  let filtroCitas = 'todas';
+  function renderAll() {
+    const citas = getCitas();
+    const servicios = getServicios();
+    const h = hoy();
+    const m = mesActual();
+    const citasHoy = citas.filter(c => c.fecha === h);
+    const citasMes = citas.filter(c => c.fecha.startsWith(m));
+
+    document.getElementById('fact-hoy').textContent = formatoEuro(citasHoy.reduce((s,c)=>s+c.importe,0));
+    document.getElementById('fact-mes').textContent = formatoEuro(citasMes.reduce((s,c)=>s+c.importe,0));
+    document.getElementById('citas-hoy').textContent = citasHoy.length;
+    const conf = citasHoy.filter(c=>c.estado==='confirmada').length;
+    const pend = citasHoy.filter(c=>c.estado==='pendiente').length;
+    const real = citasHoy.filter(c=>c.estado==='realizada').length;
+    document.getElementById('citas-detalle').textContent = citasHoy.length ? `${conf} conf. · ${pend} pend. · ${real} real.` : '—';
+    document.getElementById('clientas-mes').textContent = new Set(citasMes.map(c=>c.clienta.toLowerCase())).size;
+    document.getElementById('resumen-dia').textContent = formatoEuro(citasHoy.reduce((s,c)=>s+c.importe,0));
+    tablaCitas(citasHoy, 'tabla-citas-hoy');
+
+    let filtradas = citas;
+    if (filtroCitas === 'hoy') filtradas = citasHoy;
+    else if (filtroCitas !== 'todas') filtradas = citas.filter(c => c.estado === filtroCitas);
+    tablaCitas(filtradas, 'tabla-citas-todas');
+
+    const clientasGuardadas = getClientas();
+    const mapa = {};
+    clientasGuardadas.forEach(c => {
+      mapa[c.nombre.toLowerCase()] = { id: c.id, nombre: c.nombre, telefono: c.telefono || '+34 ', visitas: 0, total: 0, ultima: '—' };
+    });
+    citas.forEach(c => {
+      const k = c.clienta.toLowerCase();
+      if (!mapa[k]) mapa[k] = { id: Date.now(), nombre: c.clienta, telefono: c.telefono || '+34 ', visitas: 0, total: 0, ultima: c.fecha };
+      mapa[k].visitas++; mapa[k].total += c.importe;
+      if (c.telefono) mapa[k].telefono = c.telefono;
+      if (c.fecha > (mapa[k].ultima === '—' ? '' : mapa[k].ultima)) mapa[k].ultima = c.fecha;
+    });
+    const clientas = Object.values(mapa).sort((a,b) => b.visitas - a.visitas);
+    const contCli = document.getElementById('lista-clientas');
+    if (!clientas.length) contCli.innerHTML = `<div class="empty-state">Aún no hay clientas registradas.</div>`;
+    else {
+      let html = `<table><thead><tr><th>Clienta</th><th>Teléfono</th><th>Visitas</th><th>Total</th><th>Última</th><th></th></tr></thead><tbody>`;
+      clientas.forEach(c => {
+        html += `<tr>
+          <td><div class="client-cell"><div class="client-avatar">${inicial(c.nombre)}</div>${c.nombre}</div></td>
+          <td>${c.telefono || '—'}</td>
+          <td>${c.visitas}</td>
+          <td>${formatoEuro(c.total)}</td>
+          <td>${c.ultima}</td>
+          <td>
+            <button class="action-btn" onclick='abrirModalClienta(${JSON.stringify({id:c.id,nombre:c.nombre,telefono:c.telefono})})'>✏️</button>
+            <button class="action-btn" onclick="eliminarClienta(${c.id})">🗑️</button>
+          </td>
+        </tr>`;
+      });
+      html += `</tbody></table>`;
+      contCli.innerHTML = html;
+    }
+
+    document.getElementById('lista-servicios').innerHTML = servicios.map(s => `
+      <div class="service-card"><h4>${s.nombre}</h4><div class="price">${formatoEuro(s.precio)}</div>
+        <div class="actions">
+          <button class="btn btn-sm btn-outline" onclick='abrirModalServicio(${JSON.stringify(s)})'>Editar</button>
+          <button class="btn btn-sm" style="background:var(--red)" onclick="eliminarServicio(${s.id})">Eliminar</button>
+        </div>
+      </div>`).join('');
+
+    document.getElementById('fac-hoy').textContent = formatoEuro(citasHoy.reduce((s,c)=>s+c.importe,0));
+    document.getElementById('fac-mes').textContent = formatoEuro(citasMes.reduce((s,c)=>s+c.importe,0));
+    document.getElementById('fac-total').textContent = formatoEuro(citas.reduce((s,c)=>s+c.importe,0));
+    document.getElementById('fac-realizadas').textContent = citas.filter(c=>c.estado==='realizada').length;
+    tablaCitas(citas.filter(c => c.estado === 'realizada').sort((a,b) => b.fecha.localeCompare(a.fecha)), 'tabla-facturacion');
+
+    const contStats = document.getElementById('stats-servicios');
+    const conteo = {};
+    citas.forEach(c => { conteo[c.servicio] = (conteo[c.servicio]||0) + 1; });
+    const max = Math.max(...Object.values(conteo), 1);
+    const sorted = Object.entries(conteo).sort((a,b) => b[1]-a[1]);
+    if (!sorted.length) contStats.innerHTML = `<div class="empty-state">Aún no hay datos.</div>`;
+    else contStats.innerHTML = sorted.map(([nombre, cant]) => `<div class="stat-bar-row"><div class="stat-bar-label"><span>${nombre}</span><span>${cant}</span></div><div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${(cant/max)*100}%"></div></div></div>`).join('');
+    document.getElementById('stats-resumen').innerHTML = `
+      <div class="stat-bar-row"><div class="stat-bar-label"><span>Total citas</span><strong>${citas.length}</strong></div></div>
+      <div class="stat-bar-row"><div class="stat-bar-label"><span>Clientas únicas</span><strong>${clientas.length}</strong></div></div>
+      <div class="stat-bar-row"><div class="stat-bar-label"><span>Ticket medio</span><strong>${formatoEuro(citas.length ? citas.reduce((s,c)=>s+c.importe,0)/citas.length : 0)}</strong></div></div>
+      <div class="stat-bar-row"><div class="stat-bar-label"><span>Servicios activos</span><strong>${servicios.length}</strong></div></div>`;
+
+    document.getElementById('cfg-citas').textContent = citas.length;
+    document.getElementById('cfg-servicios').textContent = servicios.length;
+    renderCalendario();
+  }
+
+  document.getElementById('filtros-citas')?.addEventListener('click', e => {
+    if (!e.target.classList.contains('filter-btn')) return;
+    document.querySelectorAll('#filtros-citas .filter-btn').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    filtroCitas = e.target.dataset.filtro;
+    renderAll();
+  });
+
+  function renderCalendario() {
+    const cont = document.getElementById('calendario');
+    if (!cont) return;
+    const ahora = new Date();
+    const año = ahora.getFullYear(), mes = ahora.getMonth(), hoyNum = ahora.getDate();
+    const primerDia = new Date(año, mes, 1).getDay();
+    const offset = primerDia === 0 ? 6 : primerDia - 1;
+    const diasEnMes = new Date(año, mes+1, 0).getDate();
+    const citas = getCitas();
+    const citasPorDia = {};
+    citas.forEach(c => {
+      if (c.fecha.startsWith(`${año}-${String(mes+1).padStart(2,'0')}`)) {
+        const d = parseInt(c.fecha.split('-')[2], 10);
+        citasPorDia[d] = (citasPorDia[d] || 0) + 1;
+      }
+    });
+    let html = ['L','M','X','J','V','S','D'].map(l => `<div class="day-label">${l}</div>`).join('');
+    for (let i=0; i<offset; i++) html += `<div class="day empty"></div>`;
+    for (let d=1; d<=diasEnMes; d++) {
+      const fechaStr = `${año}-${String(mes+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const n = citasPorDia[d] || 0;
+      let dots = '';
+      for (let i=0; i<Math.min(n,3); i++) dots += '<span class="day-dot"></span>';
+      html += `<div class="day ${d===hoyNum?'today':''}" onclick="agendarEnFecha('${fechaStr}')" title="${n} cita(s) — clic para agendar">
+        <span class="day-num">${d}</span>
+        ${n ? `<div class="day-dots">${dots}</div>` : ''}
+      </div>`;
+    }
+    cont.innerHTML = html;
+  }
+
+  function agendarEnFecha(fechaStr) {
+    document.querySelectorAll('.nav[data-section]').forEach(n => n.classList.remove('active'));
+    document.querySelector('.nav[data-section="citas"]')?.classList.add('active');
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById('sec-citas')?.classList.add('active');
+    abrirModalCita();
+    setTimeout(() => {
+      const inputFecha = document.getElementById('fecha');
+      if (inputFecha) inputFecha.value = fechaStr;
+    }, 50);
+  }
+
+  function ponerFecha() {
+    const opts = { weekday:'long', day:'numeric', month:'long' };
+    const f = new Date().toLocaleDateString('es-ES', opts);
+    document.getElementById('fecha-hoy').textContent = 'Resumen de tu negocio · ' + f.charAt(0).toUpperCase() + f.slice(1);
+  }
+  function borrarTodo(tipo) {
+    if (tipo === 'citas' && confirm('¿Borrar TODAS las citas?')) { localStorage.removeItem(KEY_CITAS); renderAll(); }
+    else if (tipo === 'servicios' && confirm('¿Restablecer los servicios por defecto?')) { localStorage.removeItem(KEY_SERVICIOS); renderAll(); }
+  }
+  function exportarDatos() {
+    const data = { version: 1, fecha: new Date().toISOString(), citas: getCitas(), servicios: getServicios(), clientas: getClientas() };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'giorys-rojas-copia-' + hoy() + '.json'; a.click();
+    URL.revokeObjectURL(url);
+  }
+  function importarDatos(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (!data.citas && !data.servicios && !data.clientas) { alert('Archivo no válido.'); return; }
+        if (!confirm('¿Importar estos datos? Se reemplazarán los actuales.')) return;
+        if (data.citas) setCitas(data.citas);
+        if (data.servicios) setServicios(data.servicios);
+        if (data.clientas) setClientas(data.clientas);
+        renderAll();
+        alert('Datos importados correctamente.');
+      } catch (err) { alert('No se pudo leer el archivo.'); }
+      event.target.value = '';
+    };
+    reader.readAsText(file);
+  }
+  function imprimirFacturas() {
+    const citas = getCitas().filter(c => c.estado === 'realizada').sort((a,b) => b.fecha.localeCompare(a.fecha));
+    if (!citas.length) { alert('No hay facturas para imprimir.'); return; }
+    const total = citas.reduce((s,c) => s + c.importe, 0);
+    let filas = citas.map((c,i) => `<tr>
+      <td style="padding:8px;border-bottom:1px solid #ddd">${i+1}</td>
+      <td style="padding:8px;border-bottom:1px solid #ddd">${c.fecha}</td>
+      <td style="padding:8px;border-bottom:1px solid #ddd">${c.clienta}</td>
+      <td style="padding:8px;border-bottom:1px solid #ddd">${c.telefono || '—'}</td>
+      <td style="padding:8px;border-bottom:1px solid #ddd">${c.servicio}</td>
+      <td style="padding:8px;border-bottom:1px solid #ddd;text-align:right">${formatoEuro(c.importe)}</td>
+    </tr>`).join('');
+    const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Facturas - GIORYS ROJAS</title>
+    <style>body{font-family:Arial,sans-serif;padding:40px;color:#222}h1{font-size:22px;margin:0}h2{font-size:14px;color:#666;font-weight:normal;margin:4px 0 24px}
+    table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:left;padding:10px 8px;border-bottom:2px solid #333;font-size:12px;text-transform:uppercase}
+    .total{margin-top:24px;font-size:18px;font-weight:bold;text-align:right}
+    .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}</style></head><body>
+    <div class="header"><div><h1>💅 GIORYS ROJAS by MONTECATINI</h1><h2>Listado de facturas · Citas realizadas</h2></div>
+    <div style="text-align:right;font-size:13px;color:#666">Fecha: ${new Date().toLocaleDateString('es-ES')}<br>Total: ${citas.length}</div></div>
+    <table><thead><tr><th>#</th><th>Fecha</th><th>Clienta</th><th>Teléfono</th><th>Servicio</th><th style="text-align:right">Importe</th></tr></thead>
+    <tbody>${filas}</tbody></table>
+    <div class="total">TOTAL: ${formatoEuro(total)}</div>
+    <script>window.onload=function(){window.print()}<\/script></body></html>`;
+    const w = window.open('', '_blank');
+    w.document.write(html); w.document.close();
+  }
+
+  ponerFecha();
+  renderAll();
+</script>
+</body>
+</html>
